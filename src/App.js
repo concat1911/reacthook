@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React,{useState, useEffect} from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [isLightOn, toggleLight] = useState(true);
+
+    const ChangeBG = () => {
+        toggleLight(!isLightOn);
+
+        //Previous State
+        // toggleLight(prevLight => !prevLight);
+    }
+
+    useEffect(() => {
+        document.title = `Light is ${isLightOn ? "On" : "Off"}`;
+    }, [isLightOn]);
+
+    return (
+        <div className="App" style={{background: isLightOn ? "yellow" : "black"}} onClick={ChangeBG}>
+            <h1>Turn off the Light</h1>
+        </div>
+    );
 }
 
 export default App;
