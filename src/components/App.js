@@ -6,11 +6,14 @@ export default function App() {
     const [hits, SetHits] = useState([]);
 
     useEffect(() => {
-        axios.get('http://hn.algolia.com/api/v1/search?query=javascript')
-            .then(res => {
-                SetHits(res.data.hits);
-            })
-    }, [])
+        GetHits();
+    }, []);
+
+    const GetHits = async () => {
+        const res = await axios.get('http://hn.algolia.com/api/v1/search?query=javascript');
+        
+        SetHits(res.data.hits);
+    }
 
     return(
         <div>
