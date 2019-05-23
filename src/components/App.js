@@ -5,6 +5,8 @@ export default function App() {
 
     const [hits, SetHits] = useState([]);
     const [keyword, SetKeyword] = useState("javascript");
+    const [isLoading, SetLoading] = useState(false);
+    const [error, CatchError] = useState(null);
     const searchInput = useRef();
 
     useEffect(() => {
@@ -12,8 +14,16 @@ export default function App() {
     }, []);
 
     const GetHits = async () => {
-        const res = await axios.get(`http://hn.algolia.com/api/v1/search?query=${keyword}`);    
-        SetHits(res.data.hits);
+        SetLoading(true);
+
+        try {
+            const res = await axios.get(`http://hn.algolia.com/api/v1/search?query=${keyword}`);    
+            SetHits(res.data.hits);
+        } catch (error) {
+            CatchError(error);
+        }
+
+        SetLoading(false);
     }
 
     const HandleSearch = event => {
@@ -36,16 +46,19 @@ export default function App() {
                     <button type="button" className="pure-button pure-button-primary" onClick={HandleClear}>Clear</button>
                 </fieldset>
             </form>
-
-            <ul>
-                {
-                hits.map(hit => (
-                    <li key={hit.objectID}>
-                        <a href={hit.url}>{hit.title}</a>
-                    </li>
-                ))
-                }
-            </ul>
+            {isLoading 
+                ? <img alt="loading gif" src="./melanthelab.gif" />
+                : <ul>
+                    {
+                    hits.map(hit => (
+                        <li key={hit.objectID}>
+                            <a href={hit.url}>{hit.title}</a>
+                        </li>
+                    ))
+                    }
+                </ul>
+            }
+            {error && <h1>{error.message}</h1>}
         </div>
     );
 }
